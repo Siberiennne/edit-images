@@ -3,15 +3,18 @@ export type TPointPosition = { x: number, y: number };
 export type TRectangle = { w: number, h: number };
 export type TCanvasData = { startPoint: TPointPosition, area: TRectangle };
 
-
-
 export type TResizeData = {
-    currentWidth: number;
-    currentHeight: number;
-    originalWidth: number;
-    originalHeight: number;
-    differenceWidthValue: number;
-    differenceHeightValue: number;
+    diffWidth: number;
+    diffHeight: number;
     originalEvent: MouseEvent;
     direction: ResizeDirectionEnum;
 }
+
+export type TCropData = {
+    originalWidth: number,
+    originalHeight: number,
+    originalX: number,
+    originalY: number,
+    originalMouseX: number,
+    originalMouseY: number
+  }
