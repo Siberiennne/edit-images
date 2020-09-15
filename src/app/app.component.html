@@ -10,7 +10,7 @@
           <canvas #backgroundCanvas></canvas>
 
           <div class="imageContainer">
-            <image-comp [img]="image" [imgCoor]="imgCoor" [imgDataEdited]="newImgData" (onGetImageData)="getImageData($event)"></image-comp>
+            <image-comp [img]="image" [imgCoor]="imgCoor" [cropCoor]="cropCoor" [compressionRatio]="compressionRatio" [applyCrop]="isCropSet" [imgDataEdited]="newImgData" (onGetImageData)="getImageData($event)" (onSaveCanvas)="getImageCanvasData($event)"></image-comp>
           </div>
 
           <crop-comp [isCropped]="isCropped" [imgCoor]="imgCoor" (сropCanvasData)="onCrop($event)"></crop-comp>
