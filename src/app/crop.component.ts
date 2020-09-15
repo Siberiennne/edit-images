@@ -3,7 +3,7 @@ import { PointPosition } from './../helper/PointPosition';
 import { ImageCoordinate } from './../helper/ImageCoordinate';
 import { Component, ViewChild, ElementRef, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ResizeDirectionEnum } from "../helper/enums";
-import { Rectangle } from 'src/helper/Rectangle';
+import { Rectangle } from './../helper/Rectangle';
 
 
 @Component({
@@ -64,19 +64,19 @@ export class CropComponent implements OnInit {
   }
 
   ngOnInit() {
-}
+  }
 
   ngOnChanges() {
     if (this.isCropped) {
-      this.cropData.originalWidth = this.imgCoor.rect.area.w;
-      this.cropData.originalHeight = this.imgCoor.rect.area.h;
-      this.cropData.originalX = this.imgCoor.startPoint.coor.x;
-      this.cropData.originalY = this.imgCoor.startPoint.coor.y;
+      this.cropData.originalWidth = this.imgCoor.rect.w;
+      this.cropData.originalHeight = this.imgCoor.rect.h;
+      this.cropData.originalX = this.imgCoor.startPoint.x;
+      this.cropData.originalY = this.imgCoor.startPoint.y;
 
-      this.cropContainer.nativeElement.style.top = this.imgCoor.startPoint.coor.y + 'px';
-      this.cropContainer.nativeElement.style.left = this.imgCoor.startPoint.coor.x + 'px';
-      this.cropContainer.nativeElement.style.width = this.imgCoor.rect.area.w + 'px';
-      this.cropContainer.nativeElement.style.height = this.imgCoor.rect.area.h + 'px';
+      this.cropContainer.nativeElement.style.top = this.imgCoor.startPoint.y + 'px';
+      this.cropContainer.nativeElement.style.left = this.imgCoor.startPoint.x + 'px';
+      this.cropContainer.nativeElement.style.width = this.imgCoor.rect.w + 'px';
+      this.cropContainer.nativeElement.style.height = this.imgCoor.rect.h + 'px';
     }
   }
 
@@ -105,8 +105,8 @@ export class CropComponent implements OnInit {
     this.cropContainer.nativeElement.style.height = h + "px";
     this.cropContainer.nativeElement.style.top = top + "px";
     this.cropContainer.nativeElement.style.left = left + "px";
-    let canvasData: ImageCoordinate = new ImageCoordinate(new PointPosition({ x: this.cropContainer.nativeElement.getBoundingClientRect().left, y: this.cropContainer.nativeElement.getBoundingClientRect().top }), new Rectangle({ w: w, h: h }));
-    this.сropCanvasData.emit(canvasData);
+    let cropData: ImageCoordinate = new ImageCoordinate(new PointPosition(left,  top ), new Rectangle(  w,  h ));
+    this.сropCanvasData.emit(cropData);
   }
 
   handleCropArea(event: any) {
