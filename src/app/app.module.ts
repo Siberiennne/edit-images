@@ -1,7 +1,5 @@
 import { ResizeDirective } from '../resizer/resize.directive';
-
-
-import { CropComponent } from './crop.component';
+import { CropComponent } from '../cropper/crop.component';
 import { ImageComponent } from '../imageCanvas/image.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -17,7 +15,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppComponent,
     ImageComponent,
     CropComponent,
-  
     ResizeDirective
   ],
   imports: [

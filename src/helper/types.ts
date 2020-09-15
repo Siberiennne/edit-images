@@ -15,6 +15,10 @@ export type TCropData = {
     originalHeight: number,
     originalX: number,
     originalY: number,
+    currentWidth: number,
+    currentHeight: number,
+    currentX: number,
+    currentY: number,
     originalMouseX: number,
     originalMouseY: number
   }

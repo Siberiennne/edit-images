@@ -1,9 +1,9 @@
-import { TResizeData, TCropData } from './../helper/types';
 import { PointPosition } from './../helper/PointPosition';
-import { ImageCoordinate } from './../helper/ImageCoordinate';
+import { TResizeData, TCropData } from '../helper/types';
+import { ImageCoordinate } from '../helper/ImageCoordinate';
 import { Component, ViewChild, ElementRef, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ResizeDirectionEnum } from "../helper/enums";
-import { Rectangle } from './../helper/Rectangle';
+import { Rectangle } from '../helper/Rectangle';
 
 
 @Component({
@@ -43,7 +43,7 @@ import { Rectangle } from './../helper/Rectangle';
        
       ></div>
     </div>`,
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['../app/app.component.scss']
 })
 
 export class CropComponent implements OnInit {
@@ -59,8 +59,12 @@ export class CropComponent implements OnInit {
     originalHeight: 0,
     originalX: 0,
     originalY: 0,
+    currentWidth: 0,
+    currentHeight: 0,
+    currentX: 0,
+    currentY: 0,
     originalMouseX: 0,
-    originalMouseY: 0,
+    originalMouseY: 0
   }
 
   ngOnInit() {
@@ -72,6 +76,11 @@ export class CropComponent implements OnInit {
       this.cropData.originalHeight = this.imgCoor.rect.h;
       this.cropData.originalX = this.imgCoor.startPoint.x;
       this.cropData.originalY = this.imgCoor.startPoint.y;
+
+      this.cropData.currentWidth = this.cropData.originalWidth;
+      this.cropData.currentHeight = this.cropData.originalHeight;
+      this.cropData.currentX = this.cropData.originalX;
+      this.cropData.currentY = this.cropData.originalY;
 
       this.cropContainer.nativeElement.style.top = this.imgCoor.startPoint.y + 'px';
       this.cropContainer.nativeElement.style.left = this.imgCoor.startPoint.x + 'px';
@@ -105,12 +114,21 @@ export class CropComponent implements OnInit {
     this.cropContainer.nativeElement.style.height = h + "px";
     this.cropContainer.nativeElement.style.top = top + "px";
     this.cropContainer.nativeElement.style.left = left + "px";
-    let cropData: ImageCoordinate = new ImageCoordinate(new PointPosition(left,  top ), new Rectangle(  w,  h ));
-    this.сropCanvasData.emit(cropData);
+
+    this.cropData.currentX = left;
+    this.cropData.currentY = top;
+    this.cropData.currentWidth = w;
+    this.cropData.currentHeight = h;
+    this.сropCanvasData.emit(new ImageCoordinate(new PointPosition(left, top), new Rectangle(w, h)));
   }
 
   handleCropArea(event: any) {
     event.preventDefault();
+
+    this.cropData.originalWidth = this.cropData.currentWidth;
+    this.cropData.originalHeight = this.cropData.currentHeight;
+    this.cropData.originalX = this.cropData.currentX;
+    this.cropData.originalY = this.cropData.currentY;
 
     this.cropData.originalMouseX = event.clientX;
     this.cropData.originalMouseY = event.pageY;
