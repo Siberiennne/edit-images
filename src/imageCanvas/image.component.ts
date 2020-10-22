@@ -1,28 +1,43 @@
 import { ImageCoordinate } from './../helper/ImageCoordinate';
 import { Component, ViewChild, EventEmitter, ElementRef, OnInit, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 
-
 @Component({
     selector: 'image-comp',
     template: `<canvas #imgCanvas></canvas>`
 })
 
 export class ImageComponent implements OnInit, OnChanges {
+
     @ViewChild('imgCanvas', { static: true })
     imgCanvas: ElementRef<HTMLCanvasElement>;
+
     imgCtx: CanvasRenderingContext2D;
-    @Input() imgCoor: ImageCoordinate;
-    @Input() cropCoor: ImageCoordinate;
-    @Input() img: HTMLImageElement;
-    @Input() imgDataEdited: ImageData;
-    @Input() applyCrop: boolean;
-    @Input() compressionRatio: number;
 
-    @Output() onGetImageData = new EventEmitter<ImageData>();
-    @Output() onSaveCanvas = new EventEmitter<string>();
+    @Input()
+    public imgCoor: ImageCoordinate;
 
-    imgData: ImageData = null;
-   
+    @Input()
+    public cropCoor: ImageCoordinate;
+
+    @Input()
+    public img: HTMLImageElement;
+
+    @Input()
+    public imgDataEdited: ImageData;
+
+    @Input()
+    public applyCrop: boolean;
+
+    @Input()
+    public compressionRatio: number;
+
+    @Output()
+    public onGetImageData = new EventEmitter<ImageData>();
+
+    @Output()
+    public onSaveCanvas = new EventEmitter<string>();
+
+    public imgData: ImageData = null;
 
     ngOnInit() {
         this.imgCtx = this.imgCanvas.nativeElement.getContext('2d');
@@ -30,13 +45,18 @@ export class ImageComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
 
+        if (changes.cropCoor && !this.applyCrop)
+            return;
+
         if (changes.imgDataEdited) {
             if (changes.imgDataEdited.currentValue) {
                 this.clearImageCanvas();
                 this.putImageData(this.imgDataEdited);
+                this.getData();
                 return;
             }
         }
+        
         if (this.imgCtx && this.imgCoor) {
             if (!this.imgCoor.isTrivial())
                 this.draw();
@@ -59,17 +79,14 @@ export class ImageComponent implements OnInit, OnChanges {
             this.createImageCanvas(this.cropCoor)
             let diffLeft = Math.abs(this.imgCoor.startPoint.x - this.cropCoor.startPoint.x)
             let diffTop = Math.abs(this.imgCoor.startPoint.y - this.cropCoor.startPoint.y)
-            this.imgCtx.drawImage(this.img, diffLeft / this.compressionRatio, diffTop / this.compressionRatio, this.cropCoor.rect.w / this.compressionRatio, this.cropCoor.rect.h / this.compressionRatio, 0, 0, this.cropCoor.rect.w, this.cropCoor.rect.h);
+            this.putImageData(this.imgDataEdited)
+            //this.imgCtx.drawImage(this.img, diffLeft / this.compressionRatio, diffTop / this.compressionRatio, this.cropCoor.rect.w / this.compressionRatio, this.cropCoor.rect.h / this.compressionRatio, 0, 0, this.cropCoor.rect.w, this.cropCoor.rect.h);
         }
         else {
             this.createImageCanvas(this.imgCoor)
             this.imgCtx.drawImage(this.img, 0, 0, this.imgCoor.rect.w, this.imgCoor.rect.h);
-
         }
-
-        this.imgData = this.imgCtx.getImageData(0, 0, this.imgCoor.rect.w, this.imgCoor.rect.h);
-        this.getImageData();
-        this.getDataURL();
+        this.getData();
     }
 
 
@@ -86,10 +103,14 @@ export class ImageComponent implements OnInit, OnChanges {
             this.imgCtx.clearRect(0, 0, this.imgCanvas.nativeElement.width, this.imgCanvas.nativeElement.height);
     }
 
-
     putImageData(imgData: ImageData): void {
         if (this.imgCtx)
             this.imgCtx.putImageData(imgData, 0, 0);
     }
 
+    getData() {
+        this.imgData = this.imgCtx.getImageData(0, 0, this.imgCoor.rect.w, this.imgCoor.rect.h);
+        this.getImageData();
+        this.getDataURL();
+    }
 }

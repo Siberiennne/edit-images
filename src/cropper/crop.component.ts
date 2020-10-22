@@ -47,13 +47,21 @@ import { Rectangle } from '../helper/Rectangle';
 })
 
 export class CropComponent implements OnInit {
-  @Input() isCropped: boolean = false;
-  @Input() imgCoor: ImageCoordinate;
-  @Output() сropCanvasData: EventEmitter<ImageCoordinate> = new EventEmitter();
+
+  @Input() 
+  public isCropped: boolean = false;
+
+  @Input() 
+  public imgCoor: ImageCoordinate;
+
+  @Output() 
+  public сropCanvasData: EventEmitter<ImageCoordinate> = new EventEmitter();
 
   @ViewChild('cropContainer', { static: true })
   cropContainer: ElementRef<HTMLDivElement>;
+
   ResizeDirectionEnum = ResizeDirectionEnum;
+  
   cropData: TCropData = {
     originalWidth: 0,
     originalHeight: 0,

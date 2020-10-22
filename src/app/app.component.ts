@@ -2,13 +2,12 @@ import { Rectangle } from './../helper/Rectangle';
 import { PointPosition } from './../helper/PointPosition';
 import { ImageCoordinate } from './../helper/ImageCoordinate';
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { HttpService } from './http.service';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    providers: [HttpService]
+    providers: []
 })
 
 export class AppComponent implements OnInit {
@@ -27,16 +26,17 @@ export class AppComponent implements OnInit {
 
     isButtonDisabled: boolean = true;
     isCropSet: boolean = false;
+    changeDefaultImgData: boolean = true;
 
     imgCanvasData: string = "";
 
     defaultImgData: ImageData = null;
     newImgData: ImageData = null;
     isCropped: boolean = false;
- 
+
     imageSrc: string = "";
 
-    constructor(private httpService: HttpService) { }
+    constructor() { }
 
     ngOnInit() {
         this.ctx = this.backgroundCanvas.nativeElement.getContext('2d');
@@ -87,7 +87,6 @@ export class AppComponent implements OnInit {
     }
 
     centerImage(imageArea: Rectangle, backgroundArea: Rectangle): PointPosition {
-
         let point: PointPosition = new PointPosition(0, 0);
         if (imageArea.w < backgroundArea.w) {
             point.x = (backgroundArea.w - imageArea.w) / 2;
@@ -99,7 +98,9 @@ export class AppComponent implements OnInit {
     }
 
     getImageData(data: ImageData) {
-        this.defaultImgData = data;
+        if (this.changeDefaultImgData)
+            this.defaultImgData = data;
+        else this.changeDefaultImgData = true;
     }
 
     makeImageGray() {
@@ -139,6 +140,7 @@ export class AppComponent implements OnInit {
     }
 
     changeBrightness(coef: number) {
+        this.changeDefaultImgData = false;
         if (this.defaultImgData) {
             let editedImageData: ImageData = new ImageData(this.imgCoor.rect.w, this.imgCoor.rect.h);
             let dataCopy = new Uint8ClampedArray(this.defaultImgData.data);
@@ -163,12 +165,13 @@ export class AppComponent implements OnInit {
         this.imgCanvasData = event;
     }
 
-    uploadImage() {
-        this.httpService.postImage(this.imgCanvasData).subscribe(data => {
-            console.log('Done!')
-        }, error => {
-            console.log(error);
-        });
+    downloadImage() {
+        let url = this.imgCanvasData;
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = this.file.name;
+        document.body.appendChild(a);
+        a.click();
     }
 
     clearImageCanvas() {

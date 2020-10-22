@@ -63,6 +63,7 @@ export class ResizeDirective {
 
     private setOriginalData(originalEvent: MouseEvent) {
         this.originalEvent = originalEvent;
+        
         if (this.targetElement) {
             const dataSource = this.targetElement instanceof ElementRef ? this.targetElement.nativeElement : this.targetElement;
             this.targetElementWidthValue = dataSource.offsetWidth;
